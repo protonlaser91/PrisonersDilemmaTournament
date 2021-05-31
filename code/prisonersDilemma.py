@@ -41,7 +41,7 @@ def runRound(pair):
     moduleB = importlib.import_module(STRATEGY_FOLDER+"."+pair[1])
     memoryA = None
     memoryB = None
-    
+
     LENGTH_OF_GAME = int(200-40*np.log(1-random.random())) # The games are a minimum of 200 turns long. The np.log here guarantees that every turn after the 200th has an equal (low) chance of being the final turn.
     history = np.zeros((2,LENGTH_OF_GAME),dtype=int)
     
@@ -94,12 +94,15 @@ def runFullPairingTournament(inFolder, outFile):
         scoreKeeper[strategy] = 0
         
     f = open(outFile,"w+")
+    n = 300
     for pair in itertools.combinations(STRATEGY_LIST, r=2):
-        roundHistory = runRound(pair)
-        scoresA, scoresB = tallyRoundScores(roundHistory)
-        outputRoundResults(f, pair, roundHistory, scoresA, scoresB)
-        scoreKeeper[pair[0]] += scoresA
-        scoreKeeper[pair[1]] += scoresB
+        print(pair)
+        for z in range(n):
+            roundHistory = runRound(pair)
+            scoresA, scoresB = tallyRoundScores(roundHistory)
+          #  outputRoundResults(f, pair, roundHistory, scoresA, scoresB)
+            scoreKeeper[pair[0]] += scoresA/n
+            scoreKeeper[pair[1]] += scoresB/n
         
     scoresNumpy = np.zeros(len(scoreKeeper))
     for i in range(len(STRATEGY_LIST)):
